@@ -6,6 +6,7 @@ let commentsDivEl;
 let albumsDivEl;
 let photosDivEl;
 let loadButtonEl;
+let loadButtonAlbums;
 
 function hidePhoto(){
     const photosDiv = document.getElementById('photos-content');
@@ -121,7 +122,7 @@ function onAlbumsReceived(){
 //albums userId, id, title
 function onLoadAlbums(){
     const el = this;
-    const userId = el.getAttribute('data-user-id');
+    const userId = el.getAttribute('data-user-id-albums');
 
     const xhr = new XMLHttpRequest();
     xhr.addEventListener('load', onAlbumsReceived);
@@ -263,9 +264,14 @@ function createUsersTableHeader() {
     const nameTdEl = document.createElement('td');
     nameTdEl.textContent = 'Name';
 
+    //albums (next to ID and Name)
+    const albumsTd = document.createElement('td');
+    albumsTd.textContent = "Albums";
+
     const trEl = document.createElement('tr');
     trEl.appendChild(idTdEl);
     trEl.appendChild(nameTdEl);
+    trEl.appendChild(albumsTd);
 
     const theadEl = document.createElement('thead');
     theadEl.appendChild(trEl);
@@ -286,18 +292,34 @@ function createUsersTableBody(users) {
         const dataUserIdAttr = document.createAttribute('data-user-id');
         dataUserIdAttr.value = user.id;
 
+        // userAttrId for ALBUMS
+        const dataUserIdAttrAlbums = document.createAttribute('data-user-id-albums');
+        dataUserIdAttrAlbums.value = user.id;
+
         const buttonEl = document.createElement('button');
         buttonEl.textContent = user.name;
         buttonEl.setAttributeNode(dataUserIdAttr);
-        buttonEl.addEventListener('click', onLoadAlbums);//CHANGE onLoadPosts or onLoadAlbums
+        buttonEl.addEventListener('click', onLoadPosts);//CHANGE onLoadPosts or onLoadAlbums
+
+        //show albums button
+        const buttonAlbum = document.createElement('button');
+        buttonAlbum.textContent = user.name + "'s Albums";
+        buttonAlbum.setAttributeNode(dataUserIdAttrAlbums);
+        buttonAlbum.addEventListener('click', onLoadAlbums);
+
 
         const nameTdEl = document.createElement('td');
         nameTdEl.appendChild(buttonEl);
+
+        //adding HEADER (album td)
+        const albumTd = document.createElement('td');
+        albumTd.appendChild(buttonAlbum);
 
         // creating row
         const trEl = document.createElement('tr');
         trEl.appendChild(idTdEl);
         trEl.appendChild(nameTdEl);
+        trEl.appendChild(albumTd);
 
         tbodyEl.appendChild(trEl);
     }
