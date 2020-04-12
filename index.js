@@ -6,9 +6,16 @@ let commentsDivEl;
 let albumsDivEl;
 let photosDivEl;
 let loadButtonEl;
-//let loadButtonPost;
-//let loadButtonAlbum;
-let letUlCounter = 0;
+
+function hidePhoto(){
+    const photosDiv = document.getElementById('photos-content');
+    const count = photosDiv.children.length;
+    const removeMe = photosDiv.firstElementChild;
+    if (count == 1) {
+        photosDiv.removeChild(removeMe);
+    }
+}
+
 
 //displaying photos
 function createPhotosList(photos) {
@@ -34,6 +41,7 @@ function createPhotosList(photos) {
         ul.appendChild(li);
         
     }
+    hidePhoto();
     return ul;
 }
 
@@ -55,10 +63,9 @@ function onLoadPhotos(){
     const albumId = el.getAttribute('data-album-id');
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', BASE_URL + '/photos?albumId=' + albumId); 
     xhr.addEventListener('load', onPhotosReceived);
+    xhr.open('GET', BASE_URL + '/photos?albumId=' + albumId); 
     xhr.send();
-
 }
 
 
@@ -131,10 +138,7 @@ function hideComment(){
     const removeMe2 = commentsDiv.firstElementChild;
     if (count == 1) {
         commentsDiv.removeChild(removeMe2);
-        
     } 
-    
-
 }
 
 function getCommentsData(comments) {
@@ -209,7 +213,6 @@ function createPostsList(posts) {
         const pEl = document.createElement('p');
         pEl.appendChild(strongEl);
         pEl.appendChild(document.createTextNode(`: ${post.body}`));
-        pEl.setAttribute("id", "load-komments");
 
         //clickable button to show comments
         const button = document.createElement('button');
@@ -286,7 +289,7 @@ function createUsersTableBody(users) {
         const buttonEl = document.createElement('button');
         buttonEl.textContent = user.name;
         buttonEl.setAttributeNode(dataUserIdAttr);
-        buttonEl.addEventListener('click', onLoadPosts);//CHANGE onLoadPosts or onLoadAlbums
+        buttonEl.addEventListener('click', onLoadAlbums);//CHANGE onLoadPosts or onLoadAlbums
 
         const nameTdEl = document.createElement('td');
         nameTdEl.appendChild(buttonEl);
@@ -334,6 +337,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
     photosDivEl = document.getElementById('photos');
     loadButtonEl = document.getElementById('load-users');
     loadButtonEl.addEventListener('click', onLoadUsers);
-    //loadButtonPost = document.getElementById('postbutton');
-   //loadButtonPost.addEventListener('click', onLoadComments);
 });
